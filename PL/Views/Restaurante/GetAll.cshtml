@@ -1,0 +1,82 @@
+﻿@model ML.Restaurante
+
+<div class="container">
+
+    <div class="row">
+        <div class="col-12 col-md-6 col-lg-4 mb-3">
+            @Html.ActionLink("+", "Formulario", "Restaurante", new { @class = "btn btn-success" })
+        </div>
+    </div>
+
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success">
+            <i class="bi bi-check-all"> @TempData["Success"] </i>
+        </div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger">
+            <i class="bi bi-x-square"> @TempData["Error"] </i>
+
+        </div>
+    }
+    @if (TempData["Agregado"] != null)
+    {
+        <div class="alert alert-success">
+            <i class="bi bi-floppy"> @TempData["Agregado"] </i>
+
+        </div>
+    }
+    @if(Model.Restaurantes != null && Model.Restaurantes.Count > 0)
+    {
+        <table class="table table-hover table-responsive">
+            <thead>
+                <tr>
+                    <td>Editar</td>
+                    <td>Nombre</td>
+                    <td>Slogan</td>
+                    <td>Imagen</td>
+                    <td>Descripcion</td>
+                    <td>Eliminar</td>
+                </tr>
+            </thead>
+            <tbody>
+            @foreach(ML.Restaurante restaurante in Model.Restaurantes)
+            {
+                <tr>
+                        <td>@Html.ActionLink("Editar", "Formulario", "Restaurante", new { IdRestaurante = restaurante.IdRestaurante }, new { @class = "btn btn-warning" })</td>
+                    <td>@restaurante.Nombre</td>
+                    <td>@restaurante.Slogan</td>
+                        <td>
+                            @if (restaurante.Imagen != null)
+                            {
+                                <img id="imgUsuario" src="data:image/*;base64, @Convert.ToBase64String(restaurante.Imagen)" width="50" height="50" />
+                            }
+                            else
+                            {
+
+                                <img id="imgUsuario" src="@Url.Content("~/Img/Default.png")"
+                                     width="50" height="50" />
+                            }
+                        </td>
+                        <td>@restaurante.Descripcion</td>
+                        <td>
+                            <a href="@Url.Action("Delete", "Restaurante", new { IdRestaurante = restaurante.IdRestaurante })" onclick="return confirm('Estas seguro que quieres eliminar a este usuario?')">
+                                <i class="bi bi-trash-fill"></i>
+                            </a>
+                        </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <div class="alert alert-danger" role="alert">
+            <i class="bi bi-question-octagon">No se encontraron Restaurantes!</i>
+        </div>
+    }
+
+</div>

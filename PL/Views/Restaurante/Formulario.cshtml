@@ -1,0 +1,93 @@
+﻿@model ML.Restaurante
+@{
+}
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12">
+            <h2>Restaurante</h2>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-12">
+            <h5>Ingrese los datos del restaurante</h5>
+            <hr />
+        </div>
+    </div>
+
+    @using (Html.BeginForm("Formulario", "Restaurante", FormMethod.Post, new{enctype ="multipart/form-data"}))
+    {
+        <div class="row">
+            <input type="hidden" value="@Model.IdRestaurante" name="IdRestaurante"/>
+            <div class="col-12 col-md-6 col-lg-4 mb-3">
+                @Html.LabelFor(model => model.Nombre, new { @class = "form-label" })
+                <div class="input-group mb-3 has-validation">
+                    <span class="input-group-text bi bi-pen-fill" id="basic-addon1"></span>
+                    @Html.TextBoxFor(model => model.Nombre, new { required = "required", placeholder = "Ingresa el Nombre del Restaurante", @class = "form-control", @id = "txtNombre" })
+                </div>
+            </div>
+
+            <div class="col-12 col-md-6 col-lg-4 mb-3">
+                @Html.LabelFor(model => model.Slogan, new { @class = "form-label" })
+                <div class="input-group mb-3 has-validation">
+                    <span class="input-group-text bi bi-pen-fill" id="basic-addon1"></span>
+                    @Html.TextAreaFor(model => model.Slogan, new { required = "required", placeholder = "Ingresa un Slogan", @class = "form-control", @id = "txtSlogan"})
+                </div>
+            </div>
+
+            <div class="col-12 col-md-6 col-lg-4 mb-3">
+                @Html.LabelFor(model => model.Descripcion, new { @class = "form-label" })
+                <div class="input-group mb-3 has-validation">
+                    <span class="input-group-text bi bi-pen-fill" id="basic-addon1"></span>
+                    @Html.TextAreaFor(model => model.Descripcion, new { required = "required", placeholder = "Ingresa una Descripcion del Restaurante", @class = "form-control", @id = "txtDescripcion" })
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12 col-md-6 col-lg-4 mb-3">
+                @Html.LabelFor(model => model.Imagen, new { @class = "form-label" }) <i class="bi bi-card-image"></i>
+                <input type="file" class="form-control" name="ImagenFile" accept="image/*" onchange="PrevisualizarYValidarImagen(event)" onkeypress="DesactivarEnter(event)" />
+                <br>
+                <img id="imgUsuario" src="@((Model.Imagen !=null)? $"data:image/*;base64,{Convert.ToBase64String(Model.Imagen)}": Url.Content("~/Img/Default.png"))"
+                     width="50" height="50" style="margin-top: 10px;" />
+                @Html.HiddenFor(model => model.Imagen)
+            </div>
+        </div>
+
+
+        <div class="row mt-3">
+            <div class="col-4">
+                <input type="submit" value="Guardar" class="btn btn-success" id="btnGuardar" />
+            </div>
+
+            <div class="col-4">
+                @Html.ActionLink("Regresar", "GetAll", "Usuario", new { @class = "btn btn-danger" })
+            </div>
+        </div>
+    }
+</div>
+<script>
+    function PrevisualizarYValidarImagen(event) {
+        var archivo = event.target.files[0];
+        var preview = document.getElementById("imgUsuario");
+
+        if (archivo) {
+            var extension = archivo.name.split('.').pop().toLowerCase();
+            var extensionesPermitidas = ["jpg", "jpeg", "png", "gif", "bmp"];
+
+            if (extensionesPermitidas.includes(extension)) {
+                preview.src = URL.createObjectURL(archivo);
+                preview.onload = function () {
+                    URL.revokeObjectURL(preview.src);
+                };
+            }
+            else {
+                alert("Archivo no Valido. Solo se permiten imagenes (JPG, JPEG, PNG, GIF, BMP)")
+                event.target.value = "";
+                var imagenCargada = preview.getAttribute("src")
+                preview.src = imagenCargada;
+            }
+        }
+    }
+</script>
